@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberX — AI Learning Platform</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060d1a;--s1:#0a1221;--s2:#0d1829;--s3:#112035;
+  --b:rgba(60,120,255,0.1);--b2:rgba(60,120,255,0.18);
+  --green:#00e896;--gd:rgba(0,232,150,0.08);
+  --blue:#4fa3ff;--bd:rgba(79,163,255,0.1);
+  --amber:#ffc145;--ad:rgba(255,193,69,0.1);
+  --red:#ff5f7e;--rd:rgba(255,95,126,0.1);
+  --purple:#c084fc;--pd:rgba(192,132,252,0.1);
+  --cyan:#22d3ee;
+  --t1:#d0e8ff;--t2:#5d8ab0;--t3:#263d54;
+  --mono:'Consolas','Courier New',monospace;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:system-ui,-apple-system,sans-serif;color:var(--t1);font-size:14px;display:flex;height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
+.sb{width:192px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;flex-shrink:0}
+.brand{padding:16px 14px 12px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:9px}
+.brand-ic{width:30px;height:30px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#060d1a;flex-shrink:0}
+.brand-n{font-size:13px;font-weight:700}.brand-s{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.nav{flex:1;padding:6px;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--t3);font-size:12px;font-weight:500;margin-bottom:1px;border:none;background:none;width:100%;text-align:left;transition:all .15s}
+.ni:hover{background:var(--b);color:var(--t2)}.ni.on{background:var(--gd);color:var(--green)}
+.ni svg{flex-shrink:0;width:14px;height:14px}
+.nsep{height:1px;background:var(--b);margin:6px 2px}
+.sf{padding:10px;border-top:1px solid var(--b)}
+.spill{background:var(--ad);border:1px solid rgba(255,193,69,.2);border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:6px}
+.snum{font-size:19px;font-weight:700;font-family:var(--mono);color:var(--amber);line-height:1}
+.slb{font-size:10px;color:var(--t2)}
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.view{display:none;padding:20px 22px;overflow-y:auto;height:100%;animation:fi .18s ease}
+.view.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px}
+.pt{font-size:18px;font-weight:700}.ps{font-size:11px;color:var(--t3);margin-top:2px}
+.card{background:var(--s1);border:1px solid var(--b);border-radius:10px;padding:16px}
+.card-sm{padding:11px 14px}
+.cclick:hover{border-color:var(--b2);background:var(--s2);cursor:pointer;transition:all .15s}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sh{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.stat{background:var(--s1);border:1px solid var(--b);border-radius:10px;padding:14px}
+.slbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.sval{font-size:24px;font-weight:700;font-family:var(--mono);line-height:1}
+.ssub{font-size:10px;color:var(--t2);margin-top:3px}
+.pw{margin-bottom:10px}
+.ph2{display:flex;justify-content:space-between;margin-bottom:4px}
+.pn{font-size:12px;color:var(--t2)}.pp{font-size:10px;font-family:var(--mono);color:var(--green)}
+.pt2{height:3px;background:var(--s3);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .5s ease}
+.bdg{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.br{background:var(--rd);color:var(--red)}.ba{background:var(--ad);color:var(--amber)}
+.bb{background:var(--bd);color:var(--blue)}.bg{background:var(--gd);color:var(--green)}
+.btn{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:opacity .15s}
+.btn:hover{opacity:.82}.btn:active{transform:scale(.98)}
+.btn-g{background:var(--green);color:#060d1a}.btn-gh{background:var(--s2);color:var(--t2);border:1px solid var(--b2)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.chat-wrap{background:var(--s1);border:1px solid var(--b);border-radius:10px;display:flex;flex-direction:column;height:calc(100vh - 155px);min-height:380px}
+.chat-top{padding:10px 14px;border-bottom:1px solid var(--b);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.mpill{padding:4px 11px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--b2);background:transparent;color:var(--t2);transition:all .15s;font-family:inherit}
+.mpill.on{background:var(--gd);border-color:rgba(0,232,150,.3);color:var(--green)}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:82%;padding:11px 14px;border-radius:10px;font-size:13px;line-height:1.65;word-break:break-word}
+.msg strong{color:var(--t1);font-weight:600}
+.msg code{font-family:var(--mono);background:var(--s3);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--cyan)}
+.msg pre{background:var(--s3);border:1px solid var(--b2);border-radius:7px;padding:11px;margin:7px 0;overflow-x:auto}
+.msg pre code{background:none;padding:0;font-size:12px;color:var(--green)}
+.msg-u{background:var(--bd);border:1px solid rgba(79,163,255,.2);align-self:flex-end;color:var(--t1)}
+.msg-ai{background:var(--s2);border:1px solid var(--b);align-self:flex-start;color:var(--t1)}
+.chat-ft{padding:10px 12px;border-top:1px solid var(--b);display:flex;gap:6px;align-items:flex-end}
+.cinp{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:7px;color:var(--t1);padding:9px 12px;font-family:inherit;font-size:13px;resize:none;min-height:38px;max-height:110px;outline:none;line-height:1.5}
+.cinp:focus{border-color:var(--green)}.cinp::placeholder{color:var(--t3)}
+.sndb{background:var(--green);color:#060d1a;border:none;border-radius:7px;width:38px;height:38px;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.sndb:hover{opacity:.82}.sndb:disabled{opacity:.3;cursor:not-allowed}
+@keyframes tp{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.tdot span{width:5px;height:5px;background:var(--green);border-radius:50%;animation:tp 1.2s infinite;display:inline-block;margin:0 1px}
+.tdot span:nth-child(2){animation-delay:.2s}.tdot span:nth-child(3){animation-delay:.4s}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.chip{padding:4px 11px;border-radius:20px;font-size:11px;border:1px solid var(--b2);background:var(--s2);color:var(--t2);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--green);color:var(--green);background:var(--gd)}
+.pw2{background:var(--s1);border:1px solid var(--b);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.phd{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;transition:background .1s;user-select:none}
+.phd:hover{background:var(--s2)}
+.pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pttl{font-size:13px;font-weight:600;flex:1}
+.pmet{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.pchv{font-size:9px;color:var(--t3);transition:transform .2s}.pchv.on{transform:rotate(90deg)}
+.pbody{display:none;border-top:1px solid var(--b)}.pbody.on{display:block}
+.tr{display:flex;align-items:flex-start;gap:9px;padding:8px 14px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
+.tr:last-child{border-bottom:none}.tr:hover{background:var(--s2)}
+.tr.done .tn{text-decoration:line-through;color:var(--t3)}
+.tchk{width:16px;height:16px;border:1.5px solid var(--t3);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:9px;transition:all .15s}
+.tr.done .tchk{background:var(--green);border-color:var(--green);color:#060d1a}
+.tn{font-size:12px;flex:1}.td2{font-size:11px;color:var(--t3);margin-top:2px;line-height:1.5}
+.atb{font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;padding:0;margin-top:2px;text-decoration:underline;text-underline-offset:2px;font-family:inherit}
+.atb:hover{color:var(--green)}
+.iq{background:var(--s1);border:1px solid var(--b);border-radius:9px;padding:14px;margin-bottom:8px}
+.iq-q{font-size:13px;font-weight:500;margin-bottom:6px;color:var(--t1);line-height:1.5}
+.iq-h{font-size:11px;color:var(--t2);border-left:2px solid var(--green);padding-left:8px;display:none;line-height:1.7}
+.iq-h.on{display:block}
+.iqtg{font-size:11px;color:var(--green);background:none;border:none;cursor:pointer;padding:3px 0;font-family:inherit}
+select.sel{background:var(--s2);border:1px solid var(--b2);color:var(--t1);padding:7px 11px;border-radius:7px;font-size:12px;font-family:inherit;outline:none;cursor:pointer;width:100%}
+select.sel:focus{border-color:var(--green)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.pc{background:var(--s1);border:1px solid var(--b);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px;transition:border-color .15s}
+.pc:hover{border-color:var(--b2)}
+.pname{font-size:13px;font-weight:600}.pdesc{font-size:11px;color:var(--t2);line-height:1.5}
+.timer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.tblock{background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .15s}
+.tblock:hover,.tblock.ton{border-color:var(--green);background:var(--gd)}
+.tblock.ton .tnum{color:var(--green)}
+.tnum{font-size:18px;font-weight:700;font-family:var(--mono);color:var(--t2)}
+.tlbl{font-size:10px;color:var(--t3);margin-top:3px}
+.rlink{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:var(--s2);border:1px solid var(--b);margin-bottom:6px;text-decoration:none;cursor:pointer;transition:border-color .15s}
+.rlink:hover{border-color:var(--b2)}
+.ric{width:32px;height:32px;border-radius:7px;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.stag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;background:var(--gd);border:1px solid rgba(0,232,150,.15);color:var(--green);font-size:11px;margin:2px}
+.stag.lk{background:var(--s2);border-color:var(--b);color:var(--t3)}
+.planr{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--b);align-items:flex-start}
+.planr:last-child{border-bottom:none}
+.plann{width:20px;height:20px;border-radius:5px;background:var(--gd);color:var(--green);font-size:10px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700}
+.toast{position:fixed;bottom:16px;right:16px;background:var(--green);color:#060d1a;padding:9px 16px;border-radius:7px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.on{opacity:1}
+</style>
+<body>
+<div style="display:flex;height:100vh;overflow:hidden">
+<aside class="sb">
+  <div class="brand">
+    <div class="brand-ic">CX</div>
+    <div><div class="brand-n">CyberX</div><div class="brand-s">AI Tutor v2</div></div>
+  </div>
+  <nav class="nav">
+    <button class="ni on" onclick="go('dashboard',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Dashboard
+    </button>
+    <button class="ni" onclick="go('tutor',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      AI Tutor
+    </button>
+    <button class="ni" onclick="go('curriculum',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 12 11 14 15 10"/></svg>
+      Curriculum
+    </button>
+    <button class="ni" onclick="go('interview',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Interview Prep
+    </button>
+    <button class="ni" onclick="go('projects',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Projects
+    </button>
+    <div class="nsep"></div>
+    <button class="ni" onclick="go('timer',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      Study Timer
+    </button>
+    <button class="ni" onclick="go('resources',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Resources
+    </button>
+  </nav>
+  <div class="sf">
+    <div class="spill">
+      <div><div class="snum" id="sb-stk">0</div><div class="slb">day streak 🔥</div></div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-size:11px;color:var(--t2)" id="sb-done">0</div>
+        <div style="font-size:10px;color:var(--t3)">topics done</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="main">
+
+<!-- DASHBOARD -->
+<section class="view on" id="v-dashboard">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:10px">
+    <div>
+      <div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:3px" id="d-date"></div>
+      <div class="pt" id="d-greet">Good morning, Hacker</div>
+      <div class="ps">Your cybersecurity + FAANG journey</div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="btn btn-gh btn-sm" onclick="logSession()">+ Log session</button>
+      <button class="btn btn-g btn-sm" onclick="go('tutor',document.querySelectorAll('.ni')[1])">Ask AI ↗</button>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:14px">
+    <div class="stat"><div class="slbl">Streak</div><div class="sval" style="color:var(--amber)" id="st-stk">0</div><div class="ssub">days in a row</div></div>
+    <div class="stat"><div class="slbl">Topics done</div><div class="sval" style="color:var(--green)" id="st-done">0</div><div class="ssub" id="st-dsub">of 0 total</div></div>
+    <div class="stat"><div class="slbl">Current phase</div><div class="sval" style="color:var(--blue)" id="st-ph">1</div><div class="ssub" id="st-phname">Foundations</div></div>
+    <div class="stat"><div class="slbl">Days remaining</div><div class="sval" style="color:var(--purple)" id="st-days">320</div><div class="ssub">est. at 5 hrs/day</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card"><div class="sh">Phase progress</div><div id="phasebars"></div></div>
+    <div class="card"><div class="sh">Today's plan</div><div id="todayplan"></div></div>
+  </div>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="card card-sm cclick" onclick="go('tutor',document.querySelectorAll('.ni')[1])">
+      <div style="font-size:20px;margin-bottom:6px">🤖</div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:2px">AI Tutor</div>
+      <div style="font-size:10px;color:var(--t3)">Learn any topic simply</div>
+    </div>
+    <div class="card card-sm cclick" onclick="go('interview',document.querySelectorAll('.ni')[3])">
+      <div style="font-size:20px;margin-bottom:6px">💼</div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:2px">Interview Prep</div>
+      <div style="font-size:10px;color:var(--t3)">FAANG practice questions</div>
+    </div>
+    <div class="card card-sm cclick" onclick="go('timer',document.querySelectorAll('.ni')[5])">
+      <div style="font-size:20px;margin-bottom:6px">⏱</div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:2px">Study Timer</div>
+      <div style="font-size:10px;color:var(--t3)">Track your 5 daily hours</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sh">Skills you can already use</div>
+    <div id="skills-unlocked" style="line-height:2.1">
+      <span style="color:var(--t3);font-size:11px">Check off topics in Curriculum to unlock skills...</span>
+    </div>
+  </div>
+</section>
+
+<!-- AI TUTOR -->
+<section class="view" id="v-tutor">
+  <div class="ph">
+    <div><div class="pt">AI Tutor</div><div class="ps">Claude AI — knows your full curriculum and current progress</div></div>
+    <button class="btn btn-gh btn-sm" onclick="clrChat()">Clear chat</button>
+  </div>
+  <div class="chips" id="qchips"></div>
+  <div class="chat-wrap">
+    <div class="chat-top">
+      <span style="font-size:10px;color:var(--t3)">Mode:</span>
+      <button class="mpill on" onclick="setMode(this,'teach')">Teach me</button>
+      <button class="mpill" onclick="setMode(this,'quiz')">Quiz me</button>
+      <button class="mpill" onclick="setMode(this,'simple')">Explain simply</button>
+      <button class="mpill" onclick="setMode(this,'code')">Code review</button>
+      <button class="mpill" onclick="setMode(this,'next')">What's next?</button>
+      <button class="mpill" onclick="setMode(this,'iv')">Interview practice</button>
+    </div>
+    <div class="msgs" id="msgs"><div class="msg msg-ai" id="wmsg"></div></div>
+    <div class="chat-ft">
+      <textarea class="cinp" id="cinp" placeholder="Ask anything — topic, concept, or paste your code..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+      <button class="sndb" id="sndb" onclick="send()">↑</button>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM -->
+<section class="view" id="v-curriculum">
+  <div class="ph">
+    <div><div class="pt">Full Curriculum</div><div class="ps">All 72 topics — check off as you complete each one. Progress saves automatically.</div></div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <span class="bdg br">Must master</span><span class="bdg ba">Solidly</span>
+      <span class="bdg bb">Basics+AI</span><span class="bdg bg">AI handles</span>
+    </div>
+  </div>
+  <div id="curr"></div>
+</section>
+
+<!-- INTERVIEW -->
+<section class="view" id="v-interview">
+  <div class="ph">
+    <div><div class="pt">Interview Prep</div><div class="ps">AI-generated FAANG-style questions based on your current progress</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="sh" style="margin-bottom:12px">Generate questions</div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Topic</div>
+          <select class="sel" id="iv-top">
+            <option value="Python programming">Python programming</option>
+            <option value="Data Structures and Algorithms">DSA — arrays, trees, graphs, DP</option>
+            <option value="Linux and system administration">Linux and systems</option>
+            <option value="Networking fundamentals TCP IP DNS HTTP">Networking (TCP/IP, DNS, HTTP)</option>
+            <option value="Web security OWASP Top 10">Web security — OWASP Top 10</option>
+            <option value="Penetration testing methodology">Penetration testing</option>
+            <option value="Cryptography fundamentals">Cryptography</option>
+            <option value="AI and ML in cybersecurity">AI/ML in security</option>
+            <option value="Blockchain and smart contract security">Blockchain security</option>
+            <option value="System design security focused">System design (security)</option>
+            <option value="Behavioral interview STAR method">Behavioral — STAR method</option>
+          </select>
+        </div>
+        <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Target company</div>
+          <select class="sel" id="iv-co"><option>Google</option><option>Microsoft</option><option>Meta</option><option>Amazon</option><option>Apple</option><option>Cloudflare</option><option>CrowdStrike</option></select>
+        </div>
+        <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Level</div>
+          <select class="sel" id="iv-diff">
+            <option value="entry level">Entry — internship / junior</option>
+            <option value="mid level" selected>Mid — 2–4 years experience</option>
+            <option value="senior level">Senior — 5+ years</option>
+          </select>
+        </div>
+        <button class="btn btn-g" onclick="genQ()" id="iv-btn">Generate 6 questions ↗</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sh" style="margin-bottom:10px">What FAANG really tests</div>
+      <div style="font-size:11px;color:var(--t2);line-height:2">
+        <div>🎯 <strong style="color:var(--t1)">Security scenarios</strong> — "Critical SQLi found in prod — what do you do?"</div>
+        <div>💻 <strong style="color:var(--t1)">Coding (2–3 rounds)</strong> — LeetCode medium/hard. Think aloud. Explain tradeoffs.</div>
+        <div>🏗 <strong style="color:var(--t1)">System design</strong> — Design a WAF, SIEM, rate limiter, auth system</div>
+        <div>🔐 <strong style="color:var(--t1)">Threat modeling</strong> — What could go wrong? How do you defend it?</div>
+        <div>🧠 <strong style="color:var(--t1)">Behavioral</strong> — 5 STAR stories: impact, conflict, failure, leadership</div>
+        <div>📊 <strong style="color:var(--t1)">Culture fit</strong> — Why security? Why this company specifically?</div>
+      </div>
+    </div>
+  </div>
+  <div id="iv-out"></div>
+</section>
+
+<!-- PROJECTS -->
+<section class="view" id="v-projects">
+  <div class="ph">
+    <div><div class="pt">Project Roadmap</div><div class="ps">13 portfolio projects — click Get AI guidance to start any one</div></div>
+  </div>
+  <div id="projlist"></div>
+</section>
+
+<!-- TIMER -->
+<section class="view" id="v-timer">
+  <div class="ph"><div><div class="pt">Study Timer</div><div class="ps">Track your 5-hour daily sessions across all 4 blocks</div></div></div>
+  <div class="timer-grid">
+    <div class="tblock" id="tb0" onclick="startTimer(0,120)"><div class="tnum" id="td0">2:00</div><div class="tlbl">Core learning</div></div>
+    <div class="tblock" id="tb1" onclick="startTimer(1,90)"><div class="tnum" id="td1">1:30</div><div class="tlbl">Labs & practice</div></div>
+    <div class="tblock" id="tb2" onclick="startTimer(2,60)"><div class="tnum" id="td2">1:00</div><div class="tlbl">Build projects</div></div>
+    <div class="tblock" id="tb3" onclick="startTimer(3,30)"><div class="tnum" id="td3">0:30</div><div class="tlbl">Notes & review</div></div>
+  </div>
+  <div class="card" style="text-align:center;margin-bottom:14px">
+    <div style="font-size:52px;font-weight:700;font-family:var(--mono);color:var(--green);letter-spacing:3px" id="timer-display">Select a block</div>
+    <div style="font-size:11px;color:var(--t3);margin-top:4px" id="timer-label">Click any block above to start</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+      <button class="btn btn-g" onclick="pauseTimer()" id="timer-pause" disabled>Pause</button>
+      <button class="btn btn-gh" onclick="stopTimer()" id="timer-stop" disabled>Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sh" style="margin-bottom:10px">Today's session log</div>
+    <div id="session-log"><div style="font-size:11px;color:var(--t3)">No sessions completed yet today</div></div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section class="view" id="v-resources">
+  <div class="ph"><div><div class="pt">Resources</div><div class="ps">Platforms, certifications, and communities</div></div></div>
+  <div class="g2">
+    <div>
+      <div class="sh" style="margin-bottom:8px">Practice platforms</div>
+      <a href="https://tryhackme.com" target="_blank" class="rlink"><div class="ric">🎮</div><div><div style="font-size:12px;font-weight:600">TryHackMe</div><div style="font-size:10px;color:var(--t3)">Guided labs — start here in Phase 2</div></div><div style="margin-left:auto;font-size:10px;color:var(--green)">Free ↗</div></a>
+      <a href="https://hackthebox.com" target="_blank" class="rlink"><div class="ric">📦</div><div><div style="font-size:12px;font-weight:600">Hack The Box</div><div style="font-size:10px;color:var(--t3)">Real CTF challenges — Phase 2+</div></div><div style="margin-left:auto;font-size:10px;color:var(--amber)">Free ↗</div></a>
+      <a href="https://leetcode.com" target="_blank" class="rlink"><div class="ric">⚡</div><div><div style="font-size:12px;font-weight:600">LeetCode</div><div style="font-size:10px;color:var(--t3)">3–4 problems daily — every single day</div></div><div style="margin-left:auto;font-size:10px;color:var(--blue)">Daily ↗</div></a>
+      <a href="https://portswigger.net/web-security" target="_blank" class="rlink"><div class="ric">🕸</div><div><div style="font-size:12px;font-weight:600">PortSwigger Web Academy</div><div style="font-size:10px;color:var(--t3)">Best free web security labs</div></div><div style="margin-left:auto;font-size:10px;color:var(--green)">Free ↗</div></a>
+      <a href="https://ethernaut.openzeppelin.com" target="_blank" class="rlink"><div class="ric">⛓</div><div><div style="font-size:12px;font-weight:600">Ethernaut</div><div style="font-size:10px;color:var(--t3)">Smart contract wargame — Phase 4</div></div><div style="margin-left:auto;font-size:10px;color:var(--purple)">Free ↗</div></a>
+      <a href="https://hackerone.com" target="_blank" class="rlink"><div class="ric">💰</div><div><div style="font-size:12px;font-weight:600">HackerOne Bug Bounty</div><div style="font-size:10px;color:var(--t3)">Start Week 19+ — real bugs, real pay</div></div><div style="margin-left:auto;font-size:10px;color:var(--amber)">Earn ↗</div></a>
+    </div>
+    <div>
+      <div class="sh" style="margin-bottom:8px">Certification roadmap</div>
+      <div class="card card-sm" style="margin-bottom:6px;display:flex;gap:10px;align-items:center">
+        <div style="background:var(--bd);color:var(--blue);font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;flex-shrink:0">1st</div>
+        <div><div style="font-size:12px;font-weight:600">CompTIA Security+</div><div style="font-size:10px;color:var(--t3)">Phase 5 — opens HR doors everywhere</div></div>
+      </div>
+      <div class="card card-sm" style="margin-bottom:6px;display:flex;gap:10px;align-items:center">
+        <div style="background:var(--ad);color:var(--amber);font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;flex-shrink:0">2nd</div>
+        <div><div style="font-size:12px;font-weight:600">eJPT (eLearnSecurity)</div><div style="font-size:10px;color:var(--t3)">Beginner pentesting — affordable</div></div>
+      </div>
+      <div class="card card-sm" style="margin-bottom:16px;display:flex;gap:10px;align-items:center">
+        <div style="background:var(--gd);color:var(--green);font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;flex-shrink:0">3rd</div>
+        <div><div style="font-size:12px;font-weight:600">OSCP</div><div style="font-size:10px;color:var(--t3)">Gold standard for pentesters — Year 2</div></div>
+      </div>
+      <div class="sh" style="margin-bottom:8px">Communities</div>
+      <a href="https://reddit.com/r/netsec" target="_blank" class="rlink"><div class="ric">🗣</div><div><div style="font-size:12px;font-weight:600">r/netsec + r/hacking</div><div style="font-size:10px;color:var(--t3)">News, writeups, discussion</div></div></a>
+      <a href="https://github.com" target="_blank" class="rlink"><div class="ric">🐙</div><div><div style="font-size:12px;font-weight:600">GitHub — start your profile now</div><div style="font-size:10px;color:var(--t3)">Commit daily. Even small things count.</div></div></a>
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const PHASES=[
+  {id:'p1',title:'Phase 1 — Foundations',weeks:'Wk 1–8',clr:'#4fa3ff',
+   sections:[
+    {lbl:'Python',topics:[
+      {id:'py1',n:'Variables, data types, operators',d:'r',desc:'int, str, float, bool, list, dict — must know without thinking'},
+      {id:'py2',n:'If/else and loops (for, while)',d:'r',desc:'Control flow — backbone of every tool you build'},
+      {id:'py3',n:'Functions — def, return, arguments',d:'r',desc:'Every hacking tool is built from functions'},
+      {id:'py4',n:'Lists and dicts manipulation',d:'r',desc:'Indexing, slicing, looping — used in every project'},
+      {id:'py5',n:'File I/O — read and write files',d:'r',desc:'Reading logs, writing reports — critical for security tools'},
+      {id:'py6',n:'Error handling — try/except',d:'a',desc:'Your tools must not crash when hitting errors'},
+      {id:'py7',n:'OOP — classes, objects, inheritance',d:'r',desc:'Building complex tools requires OOP. Know class, __init__, self'},
+      {id:'py8',n:'Modules — os, sys, subprocess, socket, requests',d:'r',desc:'Your core hacking library'},
+      {id:'py9',n:'String manipulation and regex',d:'a',desc:'Parsing scan results, extracting IPs, cleaning output'},
+      {id:'py10',n:'JSON and CSV handling',d:'a',desc:'Most APIs return JSON — read and write both formats'},
+      {id:'py11',n:'Socket programming',d:'r',desc:'Foundation of your port scanner and all network tools'},
+      {id:'py12',n:'Virtual environments and pip',d:'b',desc:'Managing projects cleanly'},
+    ]},
+    {lbl:'Linux',topics:[
+      {id:'lx1',n:'Navigation — cd, ls, pwd, find, locate',d:'r',desc:'Moving the file system without thinking'},
+      {id:'lx2',n:'File permissions — chmod, chown, rwx',d:'r',desc:'Privilege escalation depends on permissions understanding'},
+      {id:'lx3',n:'Users and groups — sudo, su, /etc/passwd',d:'r',desc:'Core to privilege escalation and lateral movement'},
+      {id:'lx4',n:'Processes — ps, top, kill, jobs',d:'r',desc:'Monitoring processes — critical for post-exploitation'},
+      {id:'lx5',n:'Networking — ifconfig, netstat, ssh, curl, wget',d:'r',desc:'Daily tools in penetration testing'},
+      {id:'lx6',n:'Pipes, grep, awk, sed',d:'a',desc:'Filtering output — saves massive time in recon'},
+      {id:'lx7',n:'Bash scripting basics',d:'a',desc:'Automating recon and repetitive tasks'},
+      {id:'lx8',n:'Cron jobs and systemctl',d:'a',desc:'How attackers persist on systems'},
+    ]},
+    {lbl:'Networking',topics:[
+      {id:'nt1',n:'OSI model — all 7 layers',d:'r',desc:'Every attack maps to a layer — know each one'},
+      {id:'nt2',n:'TCP/IP and UDP — how packets travel',d:'r',desc:'TCP handshake, connection states — foundation of Nmap and Wireshark'},
+      {id:'nt3',n:'IP addresses, subnets, CIDR notation',d:'r',desc:'IPv4, private vs public, subnet masks, 192.168.1.0/24'},
+      {id:'nt4',n:'DNS — how it works and DNS attacks',d:'r',desc:'Domain resolution, A records, DNS spoofing and enumeration'},
+      {id:'nt5',n:'HTTP and HTTPS — request/response cycle',d:'r',desc:'Methods, headers, cookies, status codes — foundation of web hacking'},
+      {id:'nt6',n:'Common port numbers',d:'a',desc:'80, 443, 22, 21, 25, 3306, 3389 — know each service'},
+      {id:'nt7',n:'ARP, DHCP, NAT',d:'a',desc:'Local network mechanics — ARP poisoning is a real attack'},
+      {id:'nt8',n:'VPN, proxies, Tor',d:'b',desc:'How anonymity tools work'},
+    ]},
+    {lbl:'DSA Part 1',topics:[
+      {id:'ds1',n:'Arrays and strings — two pointer, sliding window',d:'r',desc:'Most LeetCode problems start here'},
+      {id:'ds2',n:'Hash maps and sets',d:'r',desc:'O(1) lookup — used in 40% of interview problems'},
+      {id:'ds3',n:'Stacks and queues',d:'r',desc:'Bracket matching, BFS, DFS foundations'},
+      {id:'ds4',n:'Binary search',d:'a',desc:'O(log n) — essential for medium/hard problems'},
+    ]},
+   ]},
+  {id:'p2',title:'Phase 2 — Cybersecurity',weeks:'Wk 9–20',clr:'#00e896',
+   sections:[
+    {lbl:'Concepts',topics:[
+      {id:'cs1',n:'Attack phases — recon, scan, exploit, post, report',d:'r',desc:'The hacking methodology — every HTB box follows this'},
+      {id:'cs2',n:'OWASP Top 10 — all 10 vulnerabilities',d:'r',desc:'SQLi, XSS, CSRF, IDOR, broken auth, SSRF, misconfig and more'},
+      {id:'cs3',n:'SQL injection — manual and sqlmap',d:'r',desc:'Union-based, blind, error-based SQLi'},
+      {id:'cs4',n:'XSS — reflected, stored, DOM-based',d:'r',desc:'Injecting scripts, stealing cookies, bypassing filters'},
+      {id:'cs5',n:'CSRF and SSRF attacks',d:'a',desc:'Forging requests and hitting internal services'},
+      {id:'cs6',n:'Authentication attacks',d:'a',desc:'Brute force, credential stuffing, session hijacking'},
+      {id:'cs7',n:'Privilege escalation — Linux and Windows',d:'r',desc:'SUID binaries, sudo misconfigs, cron jobs, kernel exploits'},
+      {id:'cs8',n:'Reverse shells and payloads',d:'r',desc:'Getting a shell back — Netcat, bash, Metasploit payloads'},
+      {id:'cs9',n:'Network enumeration — SMB, FTP, SSH, NFS',d:'a',desc:'Finding services and misconfigurations'},
+      {id:'cs10',n:'Cryptography basics — hashing, encryption, TLS',d:'b',desc:'MD5, SHA, AES, RSA, how HTTPS works'},
+      {id:'cs11',n:'Reverse engineering basics — Ghidra',d:'b',desc:'Static vs dynamic analysis, strings, reading disassembly'},
+    ]},
+    {lbl:'Tools',topics:[
+      {id:'tl1',n:'Nmap — scanning and enumeration',d:'r',desc:'Port scan, OS detect, service version, scripts'},
+      {id:'tl2',n:'Burp Suite — intercepting and testing',d:'r',desc:'Proxy, Repeater, Intruder, Scanner — main web hacking tool'},
+      {id:'tl3',n:'Wireshark — packet analysis',d:'a',desc:'Capture traffic, apply filters, extract credentials'},
+      {id:'tl4',n:'Metasploit — modules, exploits, sessions',d:'a',desc:'msfconsole, search, use, set, run — practice on VMs only'},
+      {id:'tl5',n:'Gobuster / ffuf — directory fuzzing',d:'b',desc:'Finding hidden files and directories on web servers'},
+      {id:'tl6',n:'DVWA and WebGoat — practice apps',d:'r',desc:'Intentionally vulnerable apps to safely practice all attacks'},
+    ]},
+    {lbl:'DSA Part 2',topics:[
+      {id:'ds5',n:'Binary trees and BST',d:'r',desc:'Traversals (inorder, preorder, postorder), search, insert'},
+      {id:'ds6',n:'Graphs — BFS and DFS',d:'r',desc:'Shortest path, connected components, cycle detection'},
+      {id:'ds7',n:'Linked lists',d:'a',desc:"Reversal, cycle detection (Floyd's), merging"},
+      {id:'ds8',n:'Sorting — merge, quick, time complexity',d:'a',desc:'Know Big-O for all major sorts'},
+      {id:'ds9',n:'Dynamic programming basics',d:'a',desc:'Memoization, tabulation — fibonacci, knapsack'},
+      {id:'ds10',n:'Heaps and priority queues',d:'b',desc:'Top-K problems — use Python heapq'},
+    ]},
+   ]},
+  {id:'p3',title:'Phase 3 — AI/ML Security',weeks:'Wk 21–32',clr:'#ffc145',
+   sections:[
+    {lbl:'ML Foundations',topics:[
+      {id:'ml1',n:'ML types — supervised, unsupervised, reinforcement',d:'a',desc:'What each is, when to use which — concept, not math'},
+      {id:'ml2',n:'NumPy and Pandas for security data',d:'a',desc:'Loading, cleaning, exploring logs and network traffic'},
+      {id:'ml3',n:'Scikit-learn — train and evaluate models',d:'a',desc:'train_test_split, fit, predict, accuracy, confusion matrix'},
+      {id:'ml4',n:'Neural networks — concepts only',d:'b',desc:'What neurons and layers are — use pre-built models'},
+      {id:'ml5',n:'NLP basics — tokenization, TF-IDF',d:'b',desc:'Text classification for phishing — AI generates code'},
+    ]},
+    {lbl:'Security ML',topics:[
+      {id:'ml6',n:'Anomaly detection — Isolation Forest, autoencoders',d:'r',desc:'Core of any intrusion detection system — must build this'},
+      {id:'ml7',n:'Classification for malware detection',d:'a',desc:'Static features + classifier — full project'},
+      {id:'ml8',n:'Feature engineering for security data',d:'a',desc:'Turning raw logs into model features'},
+      {id:'ml9',n:'Model evaluation — precision, recall, F1',d:'a',desc:'Why accuracy alone is misleading in security models'},
+      {id:'ml10',n:'Build: AI intrusion detection system',d:'r',desc:'Train on NSL-KDD, real-time alerts — full project'},
+      {id:'ml11',n:'Build: Phishing email detector',d:'r',desc:'NLP + ML email classifier — full project'},
+      {id:'ml12',n:'Build: Malware classification system',d:'r',desc:'Static features + ML classifier — full project'},
+    ]},
+   ]},
+  {id:'p4',title:'Phase 4 — Blockchain Security',weeks:'Wk 33–40',clr:'#c084fc',
+   sections:[
+    {lbl:'Foundations',topics:[
+      {id:'bc1',n:'How blockchain works',d:'a',desc:'Blocks, chains, hashing, consensus (PoW, PoS)'},
+      {id:'bc2',n:'Ethereum — EVM, gas, wallets, transactions',d:'a',desc:'How Ethereum works, gas fees, signing transactions'},
+      {id:'bc3',n:'Solidity programming basics',d:'a',desc:'Contracts, functions, variables, mappings, events'},
+    ]},
+    {lbl:'Smart Contract Security',topics:[
+      {id:'bc4',n:'Reentrancy attacks',d:'r',desc:'Most famous smart contract vulnerability — exploit and defend'},
+      {id:'bc5',n:'Integer overflow, access control, front-running',d:'r',desc:'Classic vulnerability categories every auditor must know'},
+      {id:'bc6',n:'Ethernaut challenges — all levels',d:'r',desc:'Best hands-on smart contract security practice'},
+      {id:'bc7',n:'Audit tools — Slither and Mythril',d:'b',desc:'Automated scanners — AI explains the findings'},
+    ]},
+   ]},
+  {id:'p5',title:'Phase 5 — FAANG & Advanced',weeks:'Wk 41–52',clr:'#ff5f7e',
+   sections:[
+    {lbl:'Interview & Capstone',topics:[
+      {id:'iv1',n:'DSA intensive — DP, advanced graphs, tries',d:'r',desc:'150+ LeetCode problems — 3–4 daily at medium/hard'},
+      {id:'iv2',n:'System design — security focused',d:'a',desc:'Auth systems, WAF, SIEM, rate limiters'},
+      {id:'iv3',n:'Mock coding interviews',d:'r',desc:'Practice on Pramp and Interviewing.io — think aloud always'},
+      {id:'iv4',n:'Behavioral stories — STAR method',d:'a',desc:'5 strong stories: impact, conflict, failure, leadership'},
+      {id:'iv5',n:'CompTIA Security+ study',d:'a',desc:'Foundational cert — opens HR doors at large companies'},
+      {id:'iv6',n:'Build: AI security dashboard',d:'r',desc:'Logs, alerts, detection, visualization — capstone project'},
+      {id:'iv7',n:'GitHub portfolio polish',d:'r',desc:'READMEs, clean commits, contribution graph green'},
+    ]},
+   ]},
+];
+const ALL_T=PHASES.flatMap(p=>p.sections.flatMap(s=>s.topics));
+const TOTAL=ALL_T.length;
+const DL={r:'Must master',a:'Solidly',b:'Basics+AI'};
+const DC={r:'br',a:'ba',b:'bb'};
+const PROJECTS=[
+  {ph:'Phase 1',n:'Python port scanner',d:'Scan port ranges using sockets. Your first real hacking tool.',ask:'Help me build a Python port scanner from scratch — explain each part simply'},
+  {ph:'Phase 1',n:'IP information tool',d:'Fetch geolocation, ASN, hostname for any IP using public APIs.',ask:'Teach me how to build an IP information lookup tool in Python step by step'},
+  {ph:'Phase 2',n:'Network scanner',d:'Discover live hosts on a subnet, identify open services.',ask:'How do I build a Python network scanner that discovers live hosts on a subnet?'},
+  {ph:'Phase 2',n:'Web vulnerability scanner',d:'Automatically test for SQLi and XSS in web forms.',ask:'Guide me through building a web vulnerability scanner for SQLi and XSS in Python'},
+  {ph:'Phase 2',n:'Password brute-force tool',d:'Dictionary attack on login forms — ethical lab use only.',ask:'How do I build a Python brute force tool for login pages? Explain threading too'},
+  {ph:'Phase 2',n:'Recon multi-tool',d:'Port scan + web recon + subdomain enumeration in one CLI.',ask:'Help me build a combined recon tool — port scanning, web recon and subdomain enumeration'},
+  {ph:'Phase 3',n:'AI intrusion detection system',d:'Train ML on NSL-KDD data to detect attacks in real time.',ask:'Walk me through building an AI intrusion detection system with Python and sklearn'},
+  {ph:'Phase 3',n:'Phishing email detector',d:'NLP + ML classifier that identifies phishing from email text.',ask:'How do I build a phishing email detector using NLP and machine learning step by step?'},
+  {ph:'Phase 3',n:'Malware classifier',d:'Static feature extraction + ML classifier for malware vs benign.',ask:'Teach me how to build a malware classification system using static analysis and ML'},
+  {ph:'Phase 4',n:'Wallet smart contract',d:'Solidity contract with deposit, withdraw, balance. Deploy to testnet.',ask:'Help me write and deploy a basic wallet smart contract in Solidity from scratch'},
+  {ph:'Phase 4',n:'Smart contract vulnerability analyzer',d:'Script to scan Solidity code for reentrancy and common bugs.',ask:'How do I build a tool that detects reentrancy and other vulnerabilities in Solidity?'},
+  {ph:'Phase 5',n:'AI cybersecurity dashboard',d:'Full dashboard: log ingestion, ML alerts, threat visualization.',ask:'Guide me through building a full cybersecurity dashboard with AI threat detection'},
+  {ph:'Phase 5',n:'Custom hacking framework',d:'Modular Python: scanner + exploit + report modules. Ethical only.',ask:'How do I architect a modular ethical hacking framework in Python?'},
+];
+const SKILL_MAP=[
+  {r:['py1','py2','py3'],l:'Write Python scripts'},
+  {r:['py11'],l:'Build network tools in Python'},
+  {r:['lx1','lx2','lx3'],l:'Navigate and manage Linux'},
+  {r:['nt1','nt2'],l:'Understand network traffic'},
+  {r:['nt4','nt5'],l:'Analyze HTTP and DNS traffic'},
+  {r:['cs1','tl1'],l:'Run Nmap scans and recon'},
+  {r:['cs3','tl2'],l:'Test for SQL injection manually'},
+  {r:['cs4','tl2'],l:'Find and exploit XSS bugs'},
+  {r:['cs7'],l:'Escalate Linux privileges'},
+  {r:['tl4'],l:'Use Metasploit for exploitation'},
+  {r:['ds1','ds2','ds3'],l:'Solve LeetCode easy problems'},
+  {r:['ds5','ds6','ds9'],l:'Solve LeetCode medium problems'},
+  {r:['ml6','ml2'],l:'Build anomaly detection models'},
+  {r:['ml10'],l:'Build an AI IDS system'},
+  {r:['bc4','bc5'],l:'Audit smart contracts'},
+];
+
+let done=new Set(),streak=0,lastDate='',chatHist=[],cmode='teach';
+let timerInt=null,timerSecs=0,timerRunning=false,timerBlock=-1,sessionLog=[];
+
+// STORAGE
+function lsGet(k,def){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch(e){return def;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function loadState(){
+  done=new Set(lsGet('cx_done',[]));
+  const s=lsGet('cx_streak',{s:0,d:''});streak=s.s;lastDate=s.d;
+  chatHist=lsGet('cx_chat',[]);
+}
+function saveState(){
+  lsSet('cx_done',[...done]);
+  lsSet('cx_streak',{s:streak,d:lastDate});
+}
+
+// NAV
+function go(id,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('v-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+  if(id==='dashboard')updDash();
+}
+
+// TOAST
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
+
+// DASHBOARD
+function updDash(){
+  const h=new Date().getHours();
+  document.getElementById('d-greet').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', Hacker';
+  document.getElementById('d-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('st-stk').textContent=streak;
+  document.getElementById('sb-stk').textContent=streak;
+  document.getElementById('st-done').textContent=done.size;
+  document.getElementById('st-dsub').textContent='of '+TOTAL+' total';
+  document.getElementById('sb-done').textContent=done.size;
+  document.getElementById('st-days').textContent=Math.max(1,Math.round((TOTAL-done.size)*0.9));
+  let cp=1,cpn='Foundations';
+  for(let i=0;i<PHASES.length;i++){
+    const pt=PHASES[i].sections.flatMap(s=>s.topics);
+    if(pt.filter(t=>done.has(t.id)).length<pt.length){cp=i+1;cpn=PHASES[i].title.split('—')[1]?.trim()||'Done';break;}
+    if(i===PHASES.length-1){cp=5;cpn='Advanced';}
+  }
+  document.getElementById('st-ph').textContent=cp;
+  document.getElementById('st-phname').textContent=cpn;
+  document.getElementById('phasebars').innerHTML=PHASES.map(p=>{
+    const pt=p.sections.flatMap(s=>s.topics);
+    const pd=pt.filter(t=>done.has(t.id)).length;
+    const pp=Math.round(pd/pt.length*100);
+    return `<div class="pw"><div class="ph2"><span class="pn" style="color:${p.clr}">${p.title.split('—')[1]?.trim()}</span><span class="pp">${pd}/${pt.length}</span></div><div class="pt2"><div class="pf" style="width:${pp}%;background:${p.clr}"></div></div></div>`;
+  }).join('');
+  const nxt=ALL_T.filter(t=>!done.has(t.id)).slice(0,4);
+  document.getElementById('todayplan').innerHTML=nxt.length===0?'<div style="color:var(--green);font-size:11px">🎉 All done! Focus on projects and interviews.</div>':
+    nxt.map((t,i)=>`<div class="planr"><div class="plann">${i+1}</div><div><div style="font-size:12px;font-weight:500">${t.n}</div><div style="font-size:10px;color:var(--t3)">${t.desc.split('.')[0]}</div></div></div>`).join('');
+  const ul=SKILL_MAP.filter(s=>s.r.every(id=>done.has(id)));
+  const lk=SKILL_MAP.filter(s=>!s.r.every(id=>done.has(id))).slice(0,5);
+  document.getElementById('skills-unlocked').innerHTML=ul.length===0?'<span style="color:var(--t3);font-size:11px">Check off topics in the Curriculum to unlock skills...</span>':
+    ul.map(s=>`<span class="stag">${s.l}</span>`).join('')+lk.map(s=>`<span class="stag lk">${s.l}</span>`).join('');
+}
+
+// CURRICULUM
+function renderCurr(){
+  document.getElementById('curr').innerHTML=PHASES.map(p=>{
+    const pt=p.sections.flatMap(s=>s.topics);
+    const pd=pt.filter(t=>done.has(t.id)).length;
+    return `<div class="pw2"><div class="phd" onclick="togP('pb${p.id}',this)">
+      <div class="pdot" style="background:${p.clr}"></div>
+      <div class="pttl">${p.title}</div>
+      <div style="font-size:10px;color:var(--t3);margin-right:5px">${p.weeks}</div>
+      <div class="pmet">${pd}/${pt.length}</div>
+      <div class="pchv">▶</div>
+    </div>
+    <div class="pbody" id="pb${p.id}">
+      ${p.sections.map(s=>`
+        <div style="padding:8px 14px 4px;background:var(--s3);border-bottom:1px solid var(--b)">
+          <span style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">${s.lbl}</span>
+        </div>
+        ${s.topics.map(t=>`
+          <div class="tr${done.has(t.id)?' done':''}" id="tr${t.id}" onclick="togT('${t.id}')">
+            <div class="tchk">${done.has(t.id)?'✓':''}</div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+                <span class="tn">${t.n}</span>
+                <span class="bdg ${DC[t.d]||'bb'}">${DL[t.d]||'Learn'}</span>
+              </div>
+              <div class="td2">${t.desc}</div>
+              <button class="atb" onclick="event.stopPropagation();askT('Teach me: ${t.n.replace(/['"]/g,' ')}')">Ask AI tutor ↗</button>
+            </div>
+          </div>`).join('')}
+      `).join('')}
+    </div></div>`;
+  }).join('');
+}
+function togP(id,hd){
+  const b=document.getElementById(id),c=hd.querySelector('.pchv');
+  b.classList.toggle('on');c.classList.toggle('on',b.classList.contains('on'));
+}
+function togT(id){
+  done.has(id)?done.delete(id):done.add(id);
+  const r=document.getElementById('tr'+id);
+  if(r){r.className='tr'+(done.has(id)?' done':'');r.querySelector('.tchk').textContent=done.has(id)?'✓':'';}
+  document.getElementById('sb-done').textContent=done.size;
+  if(done.has(id))toast('Topic done! Keep going ✓');
+  saveState();
+}
+
+// AI TUTOR
+const MODES={
+  teach:'Teach this topic. Start with a simple 1-sentence summary, then a real-world analogy, then a code example if relevant, then one hands-on task to practice.',
+  quiz:'Quiz the student with 3 questions one at a time. Wait for answers before continuing. Give clear feedback.',
+  simple:'Explain this in the SIMPLEST way possible. No jargon. Plain English. Concrete examples only. Like explaining to a smart beginner.',
+  code:'Review the code the student pasted. Be specific. Explain what is wrong and why. Show the corrected version with explanation.',
+  next:'Based on their progress, tell the student EXACTLY what to study TODAY. Specific topic name, why it is next, how to practice it.',
+  iv:'Act as a FAANG technical interviewer. Ask one realistic question. Wait for the answer. Then give detailed feedback like a real interviewer.'
+};
+function sysP(){
+  const dt=ALL_T.filter(t=>done.has(t.id)).map(t=>t.n);
+  const nt=ALL_T.filter(t=>!done.has(t.id)).slice(0,5).map(t=>t.n);
+  return `You are an elite cybersecurity and FAANG interview tutor for a student targeting top tech company security roles.
+
+STUDENT PROGRESS: ${dt.length}/${TOTAL} topics completed
+COMPLETED: ${dt.length>0?dt.join(', '):'None yet — student just starting'}
+NEXT UP: ${nt.join(', ')}
+
+CURRICULUM: Python, Linux, Networking, DSA, Cybersecurity (OWASP/pentesting/tools), AI/ML for security, Blockchain security, FAANG interview prep.
+
+CURRENT MODE: ${MODES[cmode]}
+
+TEACHING RULES:
+- Always simple and clear. Real examples and analogies first, then technical detail.
+- Use **bold** for key terms, backticks for inline code, triple backticks for code blocks.
+- Keep responses 150-300 words unless writing code.
+- End with one actionable task or question.
+- For security topics: always include both attack AND defense perspective.
+- Never be patronizing. Student is smart, just new to this.`;
+}
+function setMode(btn,m){
+  document.querySelectorAll('.mpill').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');cmode=m;
+}
+function buildChips(){
+  const chips=['Explain OSI model simply','Teach me SQL injection','How does TCP handshake work','Quiz me on Linux permissions','What should I study today?','Teach me privilege escalation'];
+  document.getElementById('qchips').innerHTML=chips.map(c=>`<div class="chip" onclick="askT('${c}')">${c}</div>`).join('');
+}
+async function send(){
+  const inp=document.getElementById('cinp'),txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';inp.style.height='auto';
+  addMsg(txt,'u');
+  chatHist.push({role:'user',content:txt});
+  await aiReply();
+}
+function askT(p){
+  go('tutor',document.querySelectorAll('.ni')[1]);
+  setTimeout(()=>{document.getElementById('cinp').value=p;send();},80);
+}
+function addMsg(t,tp){
+  const m=document.getElementById('msgs'),d=document.createElement('div');
+  d.className='msg msg-'+tp;d.innerHTML=fmt(t);
+  m.appendChild(d);m.scrollTop=m.scrollHeight;return d;
+}
+function fmt(t){
+  return t.replace(/```[\w]*\n?([\s\S]*?)```/g,'<pre><code>$1</code></pre>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n/g,'<br>');
+}
+function addTyping(){
+  const m=document.getElementById('msgs'),d=document.createElement('div');
+  d.className='msg msg-ai';d.id='typdot';
+  d.innerHTML='<span class="tdot"><span></span><span></span><span></span></span>';
+  m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+async function aiReply(){
+  const btn=document.getElementById('sndb');btn.disabled=true;
+  addTyping();
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sysP(),messages:chatHist})
+    });
+    const data=await r.json();
+    const rep=data.content?.[0]?.text||'Could not get a response. Please try again.';
+    chatHist.push({role:'assistant',content:rep});
+    document.getElementById('typdot')?.remove();
+    addMsg(rep,'ai');
+    lsSet('cx_chat',chatHist.slice(-20));
+  }catch(e){
+    document.getElementById('typdot')?.remove();
+    addMsg('Connection error. This AI tutor works when opened in a browser with internet access.','ai');
+  }
+  btn.disabled=false;
+  document.getElementById('cinp').focus();
+}
+function clrChat(){
+  chatHist=[];lsSet('cx_chat',[]);
+  const m=document.getElementById('msgs');
+  m.innerHTML='<div class="msg msg-ai" id="wmsg"></div>';
+  setWelcome();
+}
+function setWelcome(){
+  const e=document.getElementById('wmsg');if(!e)return;
+  e.innerHTML=fmt(`👋 **Welcome to CyberX AI Tutor!**
+
+I know your full ${TOTAL}-topic curriculum and your progress (${done.size} topics complete).
+
+**I can help you:**
+• **Teach** any topic simply with examples and analogies
+• **Quiz** you to test your understanding  
+• **Explain** anything in plain English with no jargon
+• **Review** your code and show you what to fix
+• **Tell you** exactly what to study next
+• **Practice** FAANG-style interview questions with you
+
+**Select a mode above**, click a chip below, or just type anything.
+
+What do you want to learn?`);
+}
+
+// INTERVIEW
+async function genQ(){
+  const top=document.getElementById('iv-top').value;
+  const co=document.getElementById('iv-co').value;
+  const diff=document.getElementById('iv-diff').value;
+  const btn=document.getElementById('iv-btn');
+  const out=document.getElementById('iv-out');
+  btn.disabled=true;btn.textContent='Generating...';
+  out.innerHTML='<div style="padding:20px;text-align:center;color:var(--t3);font-size:12px">Generating your questions...</div>';
+  const doneNames=ALL_T.filter(t=>done.has(t.id)).map(t=>t.n).join(', ')||'basics only';
+  const sys=`You are a senior technical interviewer at ${co} for a ${diff} Security Engineer role.
+Generate 6 realistic interview questions about: ${top}
+Candidate has studied: ${doneNames}
+Return ONLY a JSON array, no markdown, no explanation:
+[{"type":"Technical","q":"question text","hint":"Strong answer includes: ..."},{"type":"Practical","q":"...","hint":"..."},{"type":"Scenario","q":"...","hint":"..."},{"type":"Deep-dive","q":"...","hint":"..."},{"type":"System Design","q":"...","hint":"..."},{"type":"Behavioral","q":"...","hint":"..."}]`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages:[{role:'user',content:'Generate now'}]})
+    });
+    const data=await r.json();
+    let txt=data.content?.[0]?.text||'[]';
+    txt=txt.replace(/```json|```/g,'').trim();
+    const qs=JSON.parse(txt);
+    const TC={Technical:'#4fa3ff',Practical:'#00e896',Scenario:'#ffc145','Deep-dive':'#c084fc','System Design':'#22d3ee',Behavioral:'#ff5f7e'};
+    out.innerHTML=`<div style="font-size:11px;color:var(--t2);margin-bottom:12px;padding:8px 0">${qs.length} ${diff} questions for ${co}</div>`+
+      qs.map((q,i)=>`<div class="iq">
+        <div style="background:${(TC[q.type]||'#4fa3ff')}18;border-left:2px solid ${TC[q.type]||'#4fa3ff'};padding:3px 9px;display:inline-block;border-radius:0 4px 4px 0;margin-bottom:8px">
+          <span style="font-size:10px;font-weight:700;color:${TC[q.type]||'#4fa3ff'}">${q.type}</span>
+        </div>
+        <div class="iq-q">${i+1}. ${q.q}</div>
+        <button class="iqtg" onclick="togH(this)">Show answer guide ↓</button>
+        <div class="iq-h">${q.hint}</div>
+        <div style="margin-top:8px">
+          <button class="btn btn-gh btn-sm" onclick="practiceQ('${q.q.replace(/'/g,' ')}')">Practice with AI ↗</button>
+        </div>
+      </div>`).join('');
+  }catch(e){
+    out.innerHTML='<div style="padding:16px;color:var(--red);font-size:12px">Error. Please try again.</div>';
+  }
+  btn.disabled=false;btn.textContent='Generate 6 questions ↗';
+}
+function togH(btn){const h=btn.nextElementSibling;h.classList.toggle('on');btn.textContent=h.classList.contains('on')?'Hide ↑':'Show answer guide ↓';}
+function practiceQ(q){
+  document.querySelectorAll('.mpill').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.mpill')[5].classList.add('on');
+  cmode='iv';
+  askT('Interview question to practice: '+q);
+}
+
+// PROJECTS
+function renderProj(){
+  const phs=['Phase 1','Phase 2','Phase 3','Phase 4','Phase 5'];
+  document.getElementById('projlist').innerHTML=phs.map(ph=>{
+    const ps=PROJECTS.filter(p=>p.ph===ph);
+    return `<div style="margin-bottom:18px"><div class="sh" style="margin-bottom:8px">${ph}</div>
+      <div class="pgrid">${ps.map(p=>`
+        <div class="pc">
+          <div style="font-size:10px;color:var(--t3);font-family:var(--mono)">${p.ph}</div>
+          <div class="pname">${p.n}</div>
+          <div class="pdesc">${p.d}</div>
+          <button class="btn btn-gh btn-sm" style="margin-top:6px;width:100%" onclick="askT('${p.ask.replace(/['"]/g,' ')}')">Get AI guidance ↗</button>
+        </div>`).join('')}
+      </div></div>`;
+  }).join('');
+}
+
+// TIMER
+const TBLKS=['Core learning','Labs & practice','Build projects','Notes & review'];
+const TMINS=[120,90,60,30];
+function startTimer(i,mins){
+  if(timerRunning&&timerBlock===i){pauseTimer();return;}
+  if(timerInt)clearInterval(timerInt);
+  timerBlock=i;timerSecs=(mins||TMINS[i])*60;timerRunning=true;
+  document.querySelectorAll('.tblock').forEach((b,j)=>b.classList.toggle('ton',j===i));
+  document.getElementById('timer-pause').disabled=false;
+  document.getElementById('timer-stop').disabled=false;
+  document.getElementById('timer-label').textContent=TBLKS[i]+' — running';
+  timerInt=setInterval(()=>{
+    if(timerSecs<=0){
+      clearInterval(timerInt);timerRunning=false;
+      toast(TBLKS[i]+' complete! ✓');
+      logBlock(i,TMINS[i]);
+      document.getElementById('timer-display').textContent='Done!';
+      document.getElementById('timer-label').textContent=TBLKS[i]+' complete ✓';
+      return;
+    }
+    timerSecs--;
+    const m=Math.floor(timerSecs/60),s=timerSecs%60;
+    const str=m+':'+(s<10?'0':'')+s;
+    document.getElementById('timer-display').textContent=str;
+    document.getElementById('td'+i).textContent=str;
+  },1000);
+}
+function pauseTimer(){
+  if(!timerInt&&!timerRunning)return;
+  if(timerRunning){
+    clearInterval(timerInt);timerRunning=false;
+    document.getElementById('timer-pause').textContent='Resume';
+    document.getElementById('timer-label').textContent=TBLKS[timerBlock]+' — paused';
+  }else{
+    startTimer(timerBlock,0);
+    document.getElementById('timer-pause').textContent='Pause';
+  }
+}
+function stopTimer(){
+  clearInterval(timerInt);timerRunning=false;timerBlock=-1;
+  document.querySelectorAll('.tblock').forEach(b=>b.classList.remove('ton'));
+  document.getElementById('timer-display').textContent='Select a block';
+  document.getElementById('timer-label').textContent='Click any block above to start';
+  document.getElementById('timer-pause').textContent='Pause';
+  document.getElementById('timer-pause').disabled=true;
+  document.getElementById('timer-stop').disabled=true;
+  TMINS.forEach((m,i)=>document.getElementById('td'+i).textContent=Math.floor(m/60)+':'+(m%60<10?'0':'')+(m%60||'00'));
+}
+function logBlock(i,mins){
+  const now=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  sessionLog.push({block:TBLKS[i],mins,time:now});
+  const el=document.getElementById('session-log');
+  el.innerHTML=sessionLog.map(s=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--b);font-size:11px"><span style="color:var(--t1)">${s.block}</span><span style="color:var(--t3)">${s.mins} min — ${s.time}</span></div>`).join('');
+  const total=sessionLog.reduce((a,b)=>a+b.mins,0);
+  const pct=Math.round(total/300*100);
+  el.innerHTML+=`<div style="padding-top:8px">
+    <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px"><span style="color:var(--t2)">Daily goal</span><span style="color:var(--green);font-weight:600">${total}/300 min (${pct}%)</span></div>
+    <div style="height:4px;background:var(--s3);border-radius:4px"><div style="height:100%;background:var(--green);border-radius:4px;width:${Math.min(pct,100)}%"></div></div>
+  </div>`;
+}
+
+function logSession(){
+  const today=new Date().toDateString();
+  if(lastDate===today){toast('Already logged today!');return;}
+  const yest=new Date(Date.now()-86400000).toDateString();
+  streak=lastDate===yest?streak+1:1;
+  lastDate=today;saveState();updDash();
+  toast('Session logged! '+streak+' day streak 🔥');
+}
+
+// TEXTAREA AUTO-RESIZE
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp=document.getElementById('cinp');
+  if(inp)inp.addEventListener('input',()=>{inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,110)+'px';});
+});
+
+// INIT
+loadState();
+renderCurr();
+renderProj();
+buildChips();
+updDash();
+setWelcome();
+if(chatHist.length>0){
+  const m=document.getElementById('msgs');
+  m.innerHTML='';
+  chatHist.forEach(msg=>{if(msg.role!=='system')addMsg(msg.content,msg.role==='user'?'u':'ai');});
+}
+</script>
+</body></html>
